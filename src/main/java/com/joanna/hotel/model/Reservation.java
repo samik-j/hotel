@@ -26,7 +26,6 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @Column(nullable = false)
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
