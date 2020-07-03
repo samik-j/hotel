@@ -1,13 +1,13 @@
 package com.joanna.hotel.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity(name = "rooms")
 public class Room {
 
@@ -22,6 +22,12 @@ public class Room {
     @Column(nullable = false)
     private Integer roomNumber;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     private List<Reservation> reservations;
+
+    public Room(RoomType roomType, Integer roomNumber, List<Reservation> reservations) {
+        this.roomType = roomType;
+        this.roomNumber = roomNumber;
+        this. reservations = reservations;
+    }
 }

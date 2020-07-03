@@ -1,13 +1,13 @@
 package com.joanna.hotel.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity(name = "reservations")
 public class Reservation {
     @Id
@@ -29,4 +29,12 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
+
+    public Reservation(String userName, Integer numberOfPeople, LocalDate startDate, LocalDate endDate, Room room) {
+        this.userName = userName;
+        this.numberOfPeople = numberOfPeople;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.room = room;
+    }
 }
