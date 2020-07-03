@@ -2,6 +2,7 @@ package com.joanna.hotel;
 
 import com.joanna.hotel.dto.ReservationCreationDto;
 import com.joanna.hotel.dto.ReservationDto;
+import com.joanna.hotel.model.Reservation;
 
 import java.time.LocalDate;
 

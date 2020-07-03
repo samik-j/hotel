@@ -39,7 +39,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void save(ReservationCreationDto reservationCreationDto) {
+    public Long save(ReservationCreationDto reservationCreationDto) {
         List<Room> rooms = roomRepository.findByRoomType(checkRoomType(reservationCreationDto.getNumberOfPeople()));
 
         Room roomToBook = rooms.stream()
@@ -54,8 +54,10 @@ public class ReservationService {
                                                   roomToBook);
 
         roomToBook.getReservations().add(reservation);
-        reservationRepository.save(reservation);
+        reservation = reservationRepository.save(reservation);
         roomRepository.save(roomToBook);
+
+        return reservation.getId();
     }
 
     private RoomType checkRoomType(Integer numberOfPeople) {
