@@ -1,9 +1,7 @@
 package com.joanna.hotel.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joanna.hotel.model.Room;
 import com.joanna.hotel.model.RoomType;
-import com.joanna.hotel.repository.ReservationRepository;
 import com.joanna.hotel.repository.RoomRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,10 +45,7 @@ public class ReservationControllerComponentTest {
 
     @Test
     public void shouldReturnExistingReservationsForGetReservations() throws Exception {
-        roomRepository.save(new Room(RoomType.BASIC, 5));
-        mockMvc.perform(post("/reservations")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(reservationCreationDtoJson()));
+        givenReservationExists();
 
         ResultActions result = mockMvc.perform(get("/reservations"));
 
@@ -59,10 +54,7 @@ public class ReservationControllerComponentTest {
 
     @Test
     public void shouldGetReservationById() throws Exception {
-        roomRepository.save(new Room(RoomType.BASIC, 5));
-        mockMvc.perform(post("/reservations")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(reservationCreationDtoJson()));
+        givenReservationExists();
 
         ResultActions result = mockMvc.perform(get("/reservations/{id}", 1));
 
@@ -113,10 +105,7 @@ public class ReservationControllerComponentTest {
 
     @Test
     public void shouldDeleteResource() throws Exception {
-        roomRepository.save(new Room(RoomType.BASIC, 5));
-        mockMvc.perform(post("/reservations")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(reservationCreationDtoJson()));
+        givenReservationExists();
 
         ResultActions result = mockMvc.perform(delete("/reservations/{id}", 1));
 
@@ -128,5 +117,12 @@ public class ReservationControllerComponentTest {
         resultActions.andExpect(status().isOk())
                      .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
         assertThat(resultActions.andReturn().getResponse().getContentAsString()).isEqualTo(response);
+    }
+
+    private void givenReservationExists() throws Exception {
+        roomRepository.save(new Room(RoomType.BASIC, 5));
+        mockMvc.perform(post("/reservations")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(reservationCreationDtoJson()));
     }
 }
