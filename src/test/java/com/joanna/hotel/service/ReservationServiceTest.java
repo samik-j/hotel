@@ -115,4 +115,9 @@ public class ReservationServiceTest {
         verify(reservationRepository, times(1)).findById(1L);
     }
 
+    @Test
+    public void shouldDeleteById() {
+        reservationService.delete(1L);
+    }
+
 }

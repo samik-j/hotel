@@ -3,6 +3,7 @@ package com.joanna.hotel.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joanna.hotel.model.Room;
 import com.joanna.hotel.model.RoomType;
+import com.joanna.hotel.repository.ReservationRepository;
 import com.joanna.hotel.repository.RoomRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static com.joanna.hotel.TestUtils.reservationCreationDtoJson;
 import static com.joanna.hotel.TestUtils.reservationDtoJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,9 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ReservationControllerComponentTest {
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private RoomRepository roomRepository;
@@ -105,6 +102,26 @@ public class ReservationControllerComponentTest {
                                                        .content("{}"));
 
         result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnOkWhenDeletingNonExistingResource() throws Exception {
+        ResultActions result = mockMvc.perform(delete("/reservations/{id}", 1));
+
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldDeleteResource() throws Exception {
+        roomRepository.save(new Room(RoomType.BASIC, 5));
+        mockMvc.perform(post("/reservations")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(reservationCreationDtoJson()));
+
+        ResultActions result = mockMvc.perform(delete("/reservations/{id}", 1));
+
+        result.andExpect(status().isOk());
+        mockMvc.perform(get("/reservations/{id}", 1)).andExpect(status().isNotFound());
     }
 
     private void assertSuccessWithResponse(ResultActions resultActions, String response) throws Exception {

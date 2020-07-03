@@ -4,6 +4,7 @@ import com.joanna.hotel.dto.ReservationCreationDto;
 import com.joanna.hotel.dto.ReservationDto;
 import com.joanna.hotel.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,5 +44,10 @@ public class ReservationController {
     @ResponseStatus(HttpStatus.CREATED)
     public void saveReservation(@Valid @RequestBody ReservationCreationDto reservationCreationDto) {
         reservationService.save(reservationCreationDto);
+    }
+
+    @DeleteMapping(value = "/{reservationId}")
+    public void deleteReservation(@PathVariable Long reservationId) {
+        reservationService.delete(reservationId);
     }
 }

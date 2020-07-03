@@ -78,4 +78,8 @@ public class ReservationService {
     private boolean datesDoNotNotOverlap(LocalDate startDate1, LocalDate endDate1, LocalDate startDate2, LocalDate endDate2) {
         return (startDate1.isBefore(startDate2) && endDate1.isBefore(startDate2)) || (startDate1.isAfter(endDate2) && endDate1.isAfter(endDate2));
     }
+
+    public void delete(Long reservationId) {
+        reservationRepository.deleteById(reservationId);
+    }
 }
