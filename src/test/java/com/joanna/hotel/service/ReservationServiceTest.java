@@ -16,8 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
+import static com.joanna.hotel.TestUtils.reservationDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,9 +40,10 @@ public class ReservationServiceTest {
     @Test
     public void shouldSaveReservation() {
         Room room = new Room(RoomType.BASIC, 1);
-        when(roomRepository1.findAll()).thenReturn(Arrays.asList(room));
+        when(roomRepository1.findByRoomType(RoomType.BASIC)).thenReturn(Arrays.asList(room));
         when(roomRepository1.save(any(Room.class))).thenReturn(room);
-        ReservationDto reservationDto = new ReservationDto("some", 5, NOW.plusDays(2), NOW.plusDays(4));
+        ReservationDto reservationDto = reservationDto();
+
         reservationService.save(reservationDto);
 
         verify(reservationRepository, times(1)).save(any(Reservation.class));
@@ -51,8 +52,8 @@ public class ReservationServiceTest {
 
     @Test
     public void shouldNotSaveReservationIfThereAreNoRooms() {
-        when(roomRepository1.findAll()).thenReturn(new ArrayList<>());
-        ReservationDto reservationDto = new ReservationDto("some", 5, NOW.plusDays(2), NOW.plusDays(4));
+        when(roomRepository1.findByRoomType(RoomType.BASIC)).thenReturn(new ArrayList<>());
+        ReservationDto reservationDto = reservationDto();
 
         Throwable throwable = catchThrowable(() -> reservationService.save(reservationDto));
 
@@ -63,9 +64,7 @@ public class ReservationServiceTest {
 
     @Test
     public void shouldNotSaveReservationIfThereAreNoRoomsWithRightCapacity() {
-        Room room = new Room(RoomType.BASIC, 1);
-        when(roomRepository1.findAll()).thenReturn(Arrays.asList(room));
-        ReservationDto reservationDto = new ReservationDto("some", 5, NOW.plusDays(2), NOW.plusDays(4));
+        ReservationDto reservationDto = new ReservationDto("some", 20, NOW.plusDays(2), NOW.plusDays(4));
 
         Throwable throwable = catchThrowable(() -> reservationService.save(reservationDto));
 
@@ -73,6 +72,5 @@ public class ReservationServiceTest {
         verify(reservationRepository, times(0)).save(any(Reservation.class));
         verify(roomRepository1, times(0)).save(any(Room.class));
     }
-
 
 }
