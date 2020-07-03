@@ -33,7 +33,7 @@ public class ReservationServiceComponentTest {
 
     @Test
     public void shouldSaveReservation() {
-        roomRepository.save(new Room(RoomType.BASIC, 5, new ArrayList<>()));
+        roomRepository.save(new Room(RoomType.BASIC, 5));
         ReservationDto reservationDto = new ReservationDto("some", 4, NOW.plusDays(2), NOW.plusDays(4));
         reservationService.save(reservationDto);
 
@@ -45,7 +45,7 @@ public class ReservationServiceComponentTest {
 
     @Test
     public void shouldNotSaveReservationIfNoRoomCanBeBooked() {
-        Room room = new Room(RoomType.BASIC, 5, new ArrayList<>());
+        Room room = new Room(RoomType.BASIC, 5);
         room = roomRepository.save(room);
         ReservationDto reservationDto = new ReservationDto("some", 3, NOW.plusDays(2), NOW.plusDays(4));
         reservationService.save(reservationDto);

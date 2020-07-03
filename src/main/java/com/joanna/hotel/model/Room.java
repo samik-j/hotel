@@ -3,6 +3,7 @@ package com.joanna.hotel.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -23,11 +24,10 @@ public class Room {
     private Integer roomNumber;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
-    private List<Reservation> reservations;
+    private List<Reservation> reservations = new ArrayList<>();
 
-    public Room(RoomType roomType, Integer roomNumber, List<Reservation> reservations) {
+    public Room(RoomType roomType, Integer roomNumber) {
         this.roomType = roomType;
         this.roomNumber = roomNumber;
-        this. reservations = reservations;
     }
 }

@@ -39,7 +39,7 @@ public class ReservationServiceTest {
 
     @Test
     public void shouldSaveReservation() {
-        Room room = new Room(RoomType.BASIC, 1, new ArrayList<>());
+        Room room = new Room(RoomType.BASIC, 1);
         when(roomRepository1.findAll()).thenReturn(Arrays.asList(room));
         when(roomRepository1.save(any(Room.class))).thenReturn(room);
         ReservationDto reservationDto = new ReservationDto("some", 5, NOW.plusDays(2), NOW.plusDays(4));
@@ -63,7 +63,7 @@ public class ReservationServiceTest {
 
     @Test
     public void shouldNotSaveReservationIfThereAreNoRoomsWithRightCapacity() {
-        Room room = new Room(RoomType.BASIC, 1, new ArrayList<>());
+        Room room = new Room(RoomType.BASIC, 1);
         when(roomRepository1.findAll()).thenReturn(Arrays.asList(room));
         ReservationDto reservationDto = new ReservationDto("some", 5, NOW.plusDays(2), NOW.plusDays(4));
 
