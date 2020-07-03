@@ -1,7 +1,9 @@
 package com.joanna.hotel.service;
 
+import com.joanna.hotel.dto.ReservationCreationDto;
 import com.joanna.hotel.dto.ReservationDto;
 import com.joanna.hotel.exception.NoRoomsAvailableException;
+import com.joanna.hotel.exception.ResourceNotFoundException;
 import com.joanna.hotel.model.Reservation;
 import com.joanna.hotel.model.Room;
 import com.joanna.hotel.model.RoomType;
@@ -27,32 +29,33 @@ public class ReservationService {
         this.roomRepository = roomRepository;
     }
 
+    public ReservationDto findById(Long reservationId) {
+        return new ReservationDto(reservationRepository.findById(reservationId).orElseThrow(ResourceNotFoundException::new));
+    }
+
+    public List<ReservationDto> findAll() {
+        return reservationRepository.findAll().stream()
+                                    .map(ReservationDto::new).collect(Collectors.toList());
+    }
+
     @Transactional
-    public void save(ReservationDto reservationDto) {
-        List<Room> rooms = roomRepository.findByRoomType(checkRoomType(reservationDto.getNumberOfPeople()));
+    public void save(ReservationCreationDto reservationCreationDto) {
+        List<Room> rooms = roomRepository.findByRoomType(checkRoomType(reservationCreationDto.getNumberOfPeople()));
 
         Room roomToBook = rooms.stream()
-                               .filter(room -> canHandleReservation(room, reservationDto))
+                               .filter(room -> canHandleReservation(room, reservationCreationDto))
                                .findFirst()
                                .orElseThrow(NoRoomsAvailableException::new);
 
-        Reservation reservation = new Reservation(reservationDto.getUserName(),
-                                                  reservationDto.getNumberOfPeople(),
-                                                  reservationDto.getStartDate(),
-                                                  reservationDto.getEndDate(),
+        Reservation reservation = new Reservation(reservationCreationDto.getUserName(),
+                                                  reservationCreationDto.getNumberOfPeople(),
+                                                  reservationCreationDto.getStartDate(),
+                                                  reservationCreationDto.getEndDate(),
                                                   roomToBook);
 
         roomToBook.getReservations().add(reservation);
         reservationRepository.save(reservation);
         roomRepository.save(roomToBook);
-    }
-
-    public List<ReservationDto> findAll() {
-        return reservationRepository.findAll().stream()
-                                    .map(reservation -> new ReservationDto(reservation.getUserName(),
-                                                                           reservation.getNumberOfPeople(),
-                                                                           reservation.getStartDate(),
-                                                                           reservation.getEndDate())).collect(Collectors.toList());
     }
 
     private RoomType checkRoomType(Integer numberOfPeople) {
@@ -62,12 +65,12 @@ public class ReservationService {
                                         .orElseThrow(NoRoomsAvailableException::new);
     }
 
-    private boolean canHandleReservation(Room room, ReservationDto reservationDto) {
+    private boolean canHandleReservation(Room room, ReservationCreationDto reservationCreationDto) {
         return room.getReservations().stream()
                    .allMatch(existingReservation -> datesDoNotNotOverlap(existingReservation.getStartDate(),
                                                                          existingReservation.getEndDate(),
-                                                                         reservationDto.getStartDate(),
-                                                                         reservationDto.getEndDate()));
+                                                                         reservationCreationDto.getStartDate(),
+                                                                         reservationCreationDto.getEndDate()));
     }
 
     private boolean datesDoNotNotOverlap(LocalDate startDate1, LocalDate endDate1, LocalDate startDate2, LocalDate endDate2) {

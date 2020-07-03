@@ -8,16 +8,14 @@ import org.junit.Test;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-
-import java.time.LocalDate;
 import java.util.Set;
 
 import static com.joanna.hotel.TestUtils.reservationDto;
 import static com.joanna.hotel.TestUtils.reservationDtoJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 public class ReservationDtoTest {
+
 
     private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -38,16 +36,7 @@ public class ReservationDtoTest {
 
         Set<ConstraintViolation<ReservationDto>> violations = validator.validate(reservationDto);
 
-        assertThat(violations).hasSize(4);
-    }
-
-    @Test
-    public void shouldThrowValidationErrorsOnInvalidDates() {
-        ReservationDto reservationDto = new ReservationDto("someone", 4, LocalDate.parse("2020-07-20"), LocalDate.parse("2020-06-20"));
-
-        Set<ConstraintViolation<ReservationDto>> violations = validator.validate(reservationDto);
-
-        assertThat(violations).hasSize(1).extracting("message").containsExactly("start date must be before end date");
+        assertThat(violations).hasSize(5);
     }
 
 }

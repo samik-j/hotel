@@ -1,7 +1,7 @@
 package com.joanna.hotel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.joanna.hotel.model.Reservation;
+import com.joanna.hotel.validation.StartBeforeEndDateConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,10 +14,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ReservationDto {
-
-    @NotNull
-    private Long id;
+@StartBeforeEndDateConstraint
+public class ReservationCreationDto {
 
     @NotBlank
     private String userName;
@@ -33,12 +31,4 @@ public class ReservationDto {
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
-
-    public ReservationDto(Reservation reservation) {
-        this.id = reservation.getId();
-        this.userName = reservation.getUserName();
-        this.numberOfPeople = reservation.getNumberOfPeople();
-        this.startDate = reservation.getStartDate();
-        this.endDate = reservation.getEndDate();
-    }
 }

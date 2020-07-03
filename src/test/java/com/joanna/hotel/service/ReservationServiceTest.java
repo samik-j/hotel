@@ -1,6 +1,6 @@
 package com.joanna.hotel.service;
 
-import com.joanna.hotel.dto.ReservationDto;
+import com.joanna.hotel.dto.ReservationCreationDto;
 import com.joanna.hotel.exception.NoRoomsAvailableException;
 import com.joanna.hotel.model.Reservation;
 import com.joanna.hotel.model.Room;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.joanna.hotel.TestUtils.reservationDto;
+import static com.joanna.hotel.TestUtils.reservationCreationDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,9 +42,9 @@ public class ReservationServiceTest {
         Room room = new Room(RoomType.BASIC, 1);
         when(roomRepository1.findByRoomType(RoomType.BASIC)).thenReturn(Arrays.asList(room));
         when(roomRepository1.save(any(Room.class))).thenReturn(room);
-        ReservationDto reservationDto = reservationDto();
+        ReservationCreationDto reservationCreationDto = reservationCreationDto();
 
-        reservationService.save(reservationDto);
+        reservationService.save(reservationCreationDto);
 
         verify(reservationRepository, times(1)).save(any(Reservation.class));
         verify(roomRepository1, times(1)).save(any(Room.class));
@@ -53,9 +53,9 @@ public class ReservationServiceTest {
     @Test
     public void shouldNotSaveReservationIfThereAreNoRooms() {
         when(roomRepository1.findByRoomType(RoomType.BASIC)).thenReturn(new ArrayList<>());
-        ReservationDto reservationDto = reservationDto();
+        ReservationCreationDto reservationCreationDto = reservationCreationDto();
 
-        Throwable throwable = catchThrowable(() -> reservationService.save(reservationDto));
+        Throwable throwable = catchThrowable(() -> reservationService.save(reservationCreationDto));
 
         assertThat(throwable).isInstanceOf(NoRoomsAvailableException.class);
         verify(reservationRepository, times(0)).save(any(Reservation.class));
@@ -64,9 +64,9 @@ public class ReservationServiceTest {
 
     @Test
     public void shouldNotSaveReservationIfThereAreNoRoomsWithRightCapacity() {
-        ReservationDto reservationDto = new ReservationDto("some", 20, NOW.plusDays(2), NOW.plusDays(4));
+        ReservationCreationDto reservationCreationDto = new ReservationCreationDto("some", 20, NOW.plusDays(2), NOW.plusDays(4));
 
-        Throwable throwable = catchThrowable(() -> reservationService.save(reservationDto));
+        Throwable throwable = catchThrowable(() -> reservationService.save(reservationCreationDto));
 
         assertThat(throwable).isInstanceOf(NoRoomsAvailableException.class);
         verify(reservationRepository, times(0)).save(any(Reservation.class));
