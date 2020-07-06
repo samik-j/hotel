@@ -51,6 +51,7 @@ public class ReservationServiceTest {
         when(roomRepository.save(any())).thenReturn(ROOM);
         when(reservationRepository.save(any())).thenReturn(RESERVATION);
     }
+
     @Test
     public void shouldSaveReservation() {
         ReservationCreationDto reservationCreationDto = reservationCreationDto();

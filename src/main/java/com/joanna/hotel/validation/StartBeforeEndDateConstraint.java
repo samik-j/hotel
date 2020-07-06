@@ -6,12 +6,12 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = StartBeforeEndDateValidator.class)
-@Target( { ElementType.TYPE })
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StartBeforeEndDateConstraint {
     String message() default "start date must be before end date";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }
