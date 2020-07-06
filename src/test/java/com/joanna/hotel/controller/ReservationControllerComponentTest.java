@@ -34,9 +34,6 @@ public class ReservationControllerComponentTest {
     private RoomRepository roomRepository;
 
     @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @Test

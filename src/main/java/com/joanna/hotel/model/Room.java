@@ -25,7 +25,7 @@ public class Room {
     @Column(nullable = false)
     private Integer roomNumber;
 
-    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "room")
     private List<Reservation> reservations = new ArrayList<>();
 
     public Room(RoomType roomType, Integer roomNumber) {
