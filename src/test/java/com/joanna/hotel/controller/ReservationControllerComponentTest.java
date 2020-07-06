@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.joanna.hotel.TestUtils.*;
+import static com.joanna.hotel.TestUtils.reservationCreationDtoJson;
+import static com.joanna.hotel.TestUtils.reservationDto;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -65,10 +67,11 @@ public class ReservationControllerComponentTest {
     }
 
     @Test
-    public void shouldReturn404OnGetReservationByNonExistingId() throws Exception {
+    public void shouldReturnNotFoundOnGetReservationByNonExistingId() throws Exception {
         ResultActions result = mockMvc.perform(get("/reservations/{id}", 1));
 
         result.andExpect(status().isNotFound());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("Resource not found");
     }
 
 
@@ -107,6 +110,7 @@ public class ReservationControllerComponentTest {
                                                        .content(reservationCreationDtoJson()));
 
         result.andExpect(status().isBadRequest());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("No rooms available to book");
     }
 
     @Test
@@ -116,6 +120,7 @@ public class ReservationControllerComponentTest {
                                                        .content("{}"));
 
         result.andExpect(status().isBadRequest());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("Validation failed");
     }
 
     @Test
@@ -141,6 +146,7 @@ public class ReservationControllerComponentTest {
                                                        .content(reservationCreationDtoJson()));
 
         result.andExpect(status().isNotFound());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("Resource not found");
     }
 
     @Test
@@ -150,6 +156,7 @@ public class ReservationControllerComponentTest {
                                                        .content("{}"));
 
         result.andExpect(status().isBadRequest());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("Validation failed");
     }
 
     @Test
@@ -163,6 +170,7 @@ public class ReservationControllerComponentTest {
                                                        .content(jsonObject.toString()));
 
         result.andExpect(status().isBadRequest());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("No rooms available to book");
     }
 
     @Test
