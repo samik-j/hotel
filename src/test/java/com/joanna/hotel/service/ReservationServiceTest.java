@@ -107,6 +107,27 @@ public class ReservationServiceTest {
     }
 
     @Test
+    public void shouldFindReservationsByRoomNumber() {
+        when(reservationRepository.findByRoomNumber(1)).thenReturn(Arrays.asList(RESERVATION));
+
+        List<ReservationDto> reservationDtos = reservationService.findByRoomNumber(1);
+
+        assertThat(reservationDtos).hasSize(1);
+        assertThat(reservationDtos.get(0)).isEqualToComparingFieldByField(reservationDto());
+        verify(reservationRepository, times(1)).findByRoomNumber(1);
+    }
+
+    @Test
+    public void shouldReturnEmptyListIfThereAreNoReservationsByRoomNumber() {
+        when(reservationRepository.findByRoomNumber(1)).thenReturn(new ArrayList<>());
+
+        List<ReservationDto> reservationDtos = reservationService.findByRoomNumber(1);
+
+        assertThat(reservationDtos).isEmpty();
+        verify(reservationRepository, times(1)).findByRoomNumber(1);
+    }
+
+    @Test
     public void shouldThrowExceptionOnFindReservationByNonExistingId() {
         when(reservationRepository.findById(1L)).thenReturn(Optional.empty());
 

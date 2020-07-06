@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name = "rooms")
+@Entity
 public class Room {
 
     @Id

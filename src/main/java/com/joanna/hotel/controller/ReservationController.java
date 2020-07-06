@@ -32,6 +32,11 @@ public class ReservationController {
         return reservationService.findById(reservationId);
     }
 
+    @GetMapping(params = {"roomNumber"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ReservationDto> getReservationByRoomNumber(@RequestParam Integer roomNumber) {
+        return reservationService.findByRoomNumber(roomNumber);
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void saveReservation(@Valid @RequestBody ReservationCreationDto reservationCreationDto) {

@@ -2,7 +2,9 @@ package com.joanna.hotel.controller;
 
 import com.joanna.hotel.model.Room;
 import com.joanna.hotel.model.RoomType;
+import com.joanna.hotel.repository.ReservationRepository;
 import com.joanna.hotel.repository.RoomRepository;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +34,16 @@ public class ReservationControllerComponentTest {
     private RoomRepository roomRepository;
 
     @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Test
     public void shouldReturnEmptyListForGetReservations() throws Exception {
         ResultActions result = mockMvc.perform(get("/reservations"));
 
-        result.andExpect(status().isOk())
-              .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
-
+        assertSuccessWithResponse(result, "[]");
     }
 
     @Test
@@ -66,6 +69,25 @@ public class ReservationControllerComponentTest {
         ResultActions result = mockMvc.perform(get("/reservations/{id}", 1));
 
         result.andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    public void shouldReturnEmptyListForGetReservationsByRoomNumber() throws Exception {
+        givenReservationExists();
+
+        ResultActions result = mockMvc.perform(get("/reservations?roomNumber=1"));
+
+        assertSuccessWithResponse(result, "[]");
+    }
+
+    @Test
+    public void shouldReturnExistingReservationsForGetReservationsByRoomNumber() throws Exception {
+        givenReservationExists();
+
+        ResultActions result = mockMvc.perform(get("/reservations?roomNumber=5"));
+
+        assertSuccessWithResponse(result, "[" + reservationDtoJson() + "]");
     }
 
     @Test

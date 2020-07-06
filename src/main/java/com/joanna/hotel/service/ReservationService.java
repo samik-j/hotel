@@ -38,6 +38,13 @@ public class ReservationService {
                                     .map(ReservationDto::new).collect(Collectors.toList());
     }
 
+    public List<ReservationDto> findByRoomNumber(Integer roomNumber) {
+        return reservationRepository.findByRoomNumber(roomNumber)
+                                    .stream()
+                                    .map(ReservationDto::new)
+                                    .collect(Collectors.toList());
+    }
+
     @Transactional
     public Long save(ReservationCreationDto reservationCreationDto) {
         List<Room> rooms = roomRepository.findByRoomType(checkRoomType(reservationCreationDto.getNumberOfPeople()));
@@ -60,6 +67,10 @@ public class ReservationService {
         return reservation.getId();
     }
 
+    public void delete(Long reservationId) {
+        reservationRepository.deleteById(reservationId);
+    }
+
     private RoomType checkRoomType(Integer numberOfPeople) {
         return RoomType.sortedByCapacity.stream()
                                         .filter(roomType -> numberOfPeople <= roomType.capacity)
@@ -77,9 +88,5 @@ public class ReservationService {
 
     private boolean datesDoNotNotOverlap(LocalDate startDate1, LocalDate endDate1, LocalDate startDate2, LocalDate endDate2) {
         return (startDate1.isBefore(startDate2) && endDate1.isBefore(startDate2)) || (startDate1.isAfter(endDate2) && endDate1.isAfter(endDate2));
-    }
-
-    public void delete(Long reservationId) {
-        reservationRepository.deleteById(reservationId);
     }
 }
