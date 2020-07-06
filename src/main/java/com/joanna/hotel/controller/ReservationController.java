@@ -43,6 +43,13 @@ public class ReservationController {
         reservationService.save(reservationCreationDto);
     }
 
+    @PutMapping(value = "/{reservationId}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ReservationDto updateReservation(@PathVariable Long reservationId, @Valid @RequestBody ReservationCreationDto reservationCreationDto) {
+        return reservationService.updateReservation(reservationId, reservationCreationDto);
+    }
+
     @DeleteMapping(value = "/{reservationId}")
     public void deleteReservation(@PathVariable Long reservationId) {
         reservationService.delete(reservationId);

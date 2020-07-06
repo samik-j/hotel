@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,12 +48,7 @@ public class ReservationService {
 
     @Transactional
     public Long save(ReservationCreationDto reservationCreationDto) {
-        List<Room> rooms = roomRepository.findByRoomType(checkRoomType(reservationCreationDto.getNumberOfPeople()));
-
-        Room roomToBook = rooms.stream()
-                               .filter(room -> canHandleReservation(room, reservationCreationDto))
-                               .findFirst()
-                               .orElseThrow(NoRoomsAvailableException::new);
+        Room roomToBook = findRoom(reservationCreationDto);
 
         Reservation reservation = new Reservation(reservationCreationDto.getUserName(),
                                                   reservationCreationDto.getNumberOfPeople(),
@@ -67,8 +63,36 @@ public class ReservationService {
         return reservation.getId();
     }
 
+    @Transactional
+    public ReservationDto updateReservation(Long reservationId, ReservationCreationDto reservationCreationDto) {
+        Optional<Reservation> byId = reservationRepository.findById(reservationId);
+        Reservation reservation = byId.orElseThrow(ResourceNotFoundException::new);
+        reservation.setUserName(reservationCreationDto.getUserName());
+        reservation.setStartDate(reservationCreationDto.getStartDate());
+        reservation.setEndDate(reservationCreationDto.getEndDate());
+        if (!reservation.getNumberOfPeople().equals(reservationCreationDto.getNumberOfPeople())) {
+            reservation.setNumberOfPeople(reservationCreationDto.getNumberOfPeople());
+            Room room = findRoom(reservationCreationDto);
+            reservation.setRoom(room);
+            roomRepository.save(room);
+        }
+
+        reservation = reservationRepository.save(reservation);
+
+        return new ReservationDto(reservation);
+    }
+
     public void delete(Long reservationId) {
         reservationRepository.deleteById(reservationId);
+    }
+
+    private Room findRoom(ReservationCreationDto reservationCreationDto) {
+        List<Room> rooms = roomRepository.findByRoomType(checkRoomType(reservationCreationDto.getNumberOfPeople()));
+
+        return rooms.stream()
+                    .filter(room -> canHandleReservation(room, reservationCreationDto))
+                    .findFirst()
+                    .orElseThrow(NoRoomsAvailableException::new);
     }
 
     private RoomType checkRoomType(Integer numberOfPeople) {

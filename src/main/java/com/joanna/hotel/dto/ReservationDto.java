@@ -34,11 +34,15 @@ public class ReservationDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
+    @NotNull
+    private Integer roomNumber;
+
     public ReservationDto(Reservation reservation) {
         this.id = reservation.getId();
         this.userName = reservation.getUserName();
         this.numberOfPeople = reservation.getNumberOfPeople();
         this.startDate = reservation.getStartDate();
         this.endDate = reservation.getEndDate();
+        this.roomNumber = reservation.getRoom().getRoomNumber();
     }
 }

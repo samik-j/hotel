@@ -36,7 +36,7 @@ public class ReservationDtoTest {
 
         Set<ConstraintViolation<ReservationDto>> violations = validator.validate(reservationDto);
 
-        assertThat(violations).hasSize(5);
+        assertThat(violations).hasSize(6);
     }
 
 }

@@ -33,8 +33,10 @@ import static org.mockito.Mockito.*;
 public class ReservationServiceTest {
 
     public static final LocalDate NOW = LocalDate.now();
-    public static final Room ROOM = new Room(RoomType.BASIC, 1);
-    public static final Reservation RESERVATION = new Reservation(1L, "someone", 3, LocalDate.parse("2200-07-08"), LocalDate.parse("2200-08-08"), ROOM);
+    public static final Room ROOM_1 = new Room(RoomType.BASIC, 1);
+    public static final Room ROOM_2 = new Room(RoomType.SUITE, 1);
+
+    public Reservation reservation = new Reservation(1L, "someone", 3, LocalDate.parse("2200-07-08"), LocalDate.parse("2200-08-08"), ROOM_1);
 
     @Mock
     private ReservationRepository reservationRepository;
@@ -47,9 +49,9 @@ public class ReservationServiceTest {
 
     @Before
     public void setUp() {
-        when(roomRepository.findByRoomType(RoomType.BASIC)).thenReturn(Arrays.asList(ROOM));
-        when(roomRepository.save(any())).thenReturn(ROOM);
-        when(reservationRepository.save(any())).thenReturn(RESERVATION);
+        when(roomRepository.findByRoomType(RoomType.BASIC)).thenReturn(Arrays.asList(ROOM_1));
+        when(roomRepository.save(any())).thenReturn(ROOM_1);
+        when(reservationRepository.save(any())).thenReturn(reservation);
     }
 
     @Test
@@ -86,8 +88,58 @@ public class ReservationServiceTest {
     }
 
     @Test
+    public void shouldUpdateReservation() {
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+        ReservationCreationDto reservationCreationDto1 = reservationCreationDto();
+
+        reservationService.updateReservation(1L, reservationCreationDto1);
+
+        verify(reservationRepository, times(1)).save(any());
+        verifyNoInteractions(roomRepository);
+    }
+
+    @Test
+    public void shouldUpdateReservationAndRoomWhenNumberOfPeopleIncreased() {
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+        when(roomRepository.findByRoomType(RoomType.SUITE)).thenReturn(Arrays.asList(ROOM_2));
+        when(roomRepository.save(any())).thenReturn(ROOM_2);
+        ReservationCreationDto reservationCreationDto = reservationCreationDto();
+        reservationCreationDto.setNumberOfPeople(6);
+
+        reservationService.updateReservation(1L, reservationCreationDto);
+
+        verify(reservationRepository, times(1)).save(any());
+        verify(roomRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUpdatingNonExistingReservation() {
+        when(reservationRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Throwable throwable = catchThrowable(() -> reservationService.updateReservation(1L, reservationCreationDto()));
+
+        assertThat(throwable).isExactlyInstanceOf(ResourceNotFoundException.class);
+        verify(reservationRepository, times(0)).save(any());
+        verifyNoInteractions(roomRepository);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUpdatingReservationAndThereAreNoRoomsAvailable() {
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+        when(roomRepository.findByRoomType(RoomType.SUITE)).thenReturn(new ArrayList<>());
+        ReservationCreationDto reservationCreationDto = reservationCreationDto();
+        reservationCreationDto.setNumberOfPeople(6);
+
+        Throwable throwable = catchThrowable(() -> reservationService.updateReservation(1L, reservationCreationDto));
+
+        assertThat(throwable).isExactlyInstanceOf(NoRoomsAvailableException.class);
+        verify(reservationRepository, times(0)).save(any());
+        verify(roomRepository, times(0)).save(any());
+    }
+
+    @Test
     public void shouldFindAllReservations() {
-        when(reservationRepository.findAll()).thenReturn(Arrays.asList(RESERVATION));
+        when(reservationRepository.findAll()).thenReturn(Arrays.asList(reservation));
 
         List<ReservationDto> reservationDtos = reservationService.findAll();
 
@@ -98,7 +150,7 @@ public class ReservationServiceTest {
 
     @Test
     public void shouldFindReservationById() {
-        when(reservationRepository.findById(1L)).thenReturn(Optional.of(RESERVATION));
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
 
         ReservationDto reservationDto = reservationService.findById(1L);
 
@@ -107,8 +159,18 @@ public class ReservationServiceTest {
     }
 
     @Test
+    public void shouldThrowExceptionOnFindReservationByNonExistingId() {
+        when(reservationRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Throwable throwable = catchThrowable(() -> reservationService.findById(1L));
+
+        assertThat(throwable).isExactlyInstanceOf(ResourceNotFoundException.class);
+        verify(reservationRepository, times(1)).findById(1L);
+    }
+
+    @Test
     public void shouldFindReservationsByRoomNumber() {
-        when(reservationRepository.findByRoomNumber(1)).thenReturn(Arrays.asList(RESERVATION));
+        when(reservationRepository.findByRoomNumber(1)).thenReturn(Arrays.asList(reservation));
 
         List<ReservationDto> reservationDtos = reservationService.findByRoomNumber(1);
 
@@ -125,16 +187,6 @@ public class ReservationServiceTest {
 
         assertThat(reservationDtos).isEmpty();
         verify(reservationRepository, times(1)).findByRoomNumber(1);
-    }
-
-    @Test
-    public void shouldThrowExceptionOnFindReservationByNonExistingId() {
-        when(reservationRepository.findById(1L)).thenReturn(Optional.empty());
-
-        Throwable throwable = catchThrowable(() -> reservationService.findById(1L));
-
-        assertThat(throwable).isExactlyInstanceOf(ResourceNotFoundException.class);
-        verify(reservationRepository, times(1)).findById(1L);
     }
 
     @Test
