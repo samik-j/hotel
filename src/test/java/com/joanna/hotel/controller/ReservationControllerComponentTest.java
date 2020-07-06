@@ -100,7 +100,8 @@ public class ReservationControllerComponentTest {
                                                        .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                        .content(reservationCreationDtoJson()));
 
-        result.andExpect(status().isCreated());
+        result.andExpect(status().isCreated())
+              .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test

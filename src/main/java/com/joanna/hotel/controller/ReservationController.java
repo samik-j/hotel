@@ -2,17 +2,14 @@ package com.joanna.hotel.controller;
 
 import com.joanna.hotel.dto.ReservationCreationDto;
 import com.joanna.hotel.dto.ReservationDto;
+import com.joanna.hotel.dto.ReservationIdDto;
 import com.joanna.hotel.service.ReservationService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.trace.http.HttpTrace;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -43,8 +40,8 @@ public class ReservationController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveReservation(@Valid @RequestBody ReservationCreationDto reservationCreationDto) {
-        reservationService.save(reservationCreationDto);
+    public ReservationIdDto saveReservation(@Valid @RequestBody ReservationCreationDto reservationCreationDto) {
+        return new ReservationIdDto(reservationService.save(reservationCreationDto));
     }
 
     @PutMapping(value = "/{reservationId}",
