@@ -28,17 +28,20 @@ public class ReservationController {
         return reservationService.findAll();
     }
 
-    @GetMapping(value = "/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{reservationId}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ReservationDto getReservationById(@PathVariable Long reservationId) {
         return reservationService.findById(reservationId);
     }
 
-    @GetMapping(params = {"roomNumber"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(params = {"roomNumber"},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReservationDto> getReservationByRoomNumber(@RequestParam Integer roomNumber) {
         return reservationService.findByRoomNumber(roomNumber);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ReservationIdDto saveReservation(@Valid @RequestBody ReservationCreationDto reservationCreationDto) {
         return new ReservationIdDto(reservationService.save(reservationCreationDto));
