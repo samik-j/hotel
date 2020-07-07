@@ -87,10 +87,13 @@ public class ReservationControllerComponentTest {
     @Test
     public void shouldReturnExistingReservationsForGetReservationsByRoomNumber() throws Exception {
         givenReservationExists();
+        givenReservationExists();
 
         ResultActions result = mockMvc.perform(get("/reservations?roomNumber=1"));
 
-        assertSuccessWithListResponse(result, Arrays.asList(reservationDto()));
+        ReservationDto reservationDto = reservationDto();
+        reservationDto.setId(2L);
+        assertSuccessWithListResponse(result, Arrays.asList(reservationDto(), reservationDto));
     }
 
     @Test
@@ -195,13 +198,14 @@ public class ReservationControllerComponentTest {
         resultActions.andExpect(status().isOk())
                      .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                      .andExpect(jsonPath("$.length()").value(reservationDtos.size()));
+        String s = resultActions.andReturn().getResponse().getContentAsString();
         for (int i = 0; i < reservationDtos.size(); i++) {
-            resultActions.andExpect(jsonPath("[" + i + "].id").value(reservationDtos.get(0).getId()))
-                         .andExpect(jsonPath("[" + i + "].userName").value(reservationDtos.get(0).getUserName()))
-                         .andExpect(jsonPath("[" + i + "].numberOfPeople").value(reservationDtos.get(0).getNumberOfPeople()))
-                         .andExpect(jsonPath("[" + i + "].startDate").value(reservationDtos.get(0).getStartDate().toString()))
-                         .andExpect(jsonPath("[" + i + "].endDate").value(reservationDtos.get(0).getEndDate().toString()))
-                         .andExpect(jsonPath("[" + i + "].roomNumber").value(reservationDtos.get(0).getRoomNumber()));
+            resultActions.andExpect(jsonPath("[" + i + "].id").value(reservationDtos.get(i).getId()))
+                         .andExpect(jsonPath("[" + i + "].userName").value(reservationDtos.get(i).getUserName()))
+                         .andExpect(jsonPath("[" + i + "].numberOfPeople").value(reservationDtos.get(i).getNumberOfPeople()))
+                         .andExpect(jsonPath("[" + i + "].startDate").value(reservationDtos.get(i).getStartDate().toString()))
+                         .andExpect(jsonPath("[" + i + "].endDate").value(reservationDtos.get(i).getEndDate().toString()))
+                         .andExpect(jsonPath("[" + i + "].roomNumber").value(reservationDtos.get(i).getRoomNumber()));
         }
     }
 
