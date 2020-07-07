@@ -65,6 +65,20 @@ public class ReservationServiceTest {
     }
 
     @Test
+    public void shouldSaveMultipleReservationsForARoom() {
+        ReservationCreationDto reservationCreationDto = reservationCreationDto();
+        ReservationCreationDto reservationCreationDto2 = new ReservationCreationDto("someoneElse",
+                                                                                    3, LocalDate.parse("2200-09-08"),
+                                                                                    LocalDate.parse("2200-09-18"));
+
+        reservationService.save(reservationCreationDto);
+        reservationService.save(reservationCreationDto2);
+
+        verify(reservationRepository, times(2)).save(any(Reservation.class));
+        verify(roomRepository, times(2)).save(any(Room.class));
+    }
+
+    @Test
     public void shouldNotSaveReservationAndThrowExceptionIfThereAreNoRooms() {
         when(roomRepository.findByRoomType(RoomType.BASIC)).thenReturn(new ArrayList<>());
         ReservationCreationDto reservationCreationDto = reservationCreationDto();
