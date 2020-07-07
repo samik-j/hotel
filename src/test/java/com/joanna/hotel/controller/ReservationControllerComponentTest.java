@@ -33,8 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ReservationControllerComponentTest {
 
-    public static final int RESERVATION_ROOM_NUMBER = 1;
-
     @Autowired
     private RoomRepository roomRepository;
 
@@ -61,7 +59,7 @@ public class ReservationControllerComponentTest {
     public void shouldGetReservationById() throws Exception {
         givenReservationExists();
 
-        ResultActions result = mockMvc.perform(get("/reservations/{id}", RESERVATION_ROOM_NUMBER));
+        ResultActions result = mockMvc.perform(get("/reservations/{id}", 1));
 
         assertSuccessWithResponse(result, reservationDto());
     }
