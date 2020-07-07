@@ -65,6 +65,19 @@ public class ReservationServiceTest {
     }
 
     @Test
+    public void shouldSaveReservationToCorrectRoom() {
+        when(roomRepository.findByRoomType(RoomType.SUITE)).thenReturn(Arrays.asList(ROOM_2));
+        ReservationCreationDto reservationCreationDto = reservationCreationDto();
+        reservationCreationDto.setNumberOfPeople(6);
+
+        reservationService.save(reservationCreationDto);
+
+        verify(reservationRepository, times(1)).save(any(Reservation.class));
+        verify(roomRepository, times(1)).save(any(Room.class));
+        verify(roomRepository, times(1)).findByRoomType(RoomType.SUITE);
+    }
+
+    @Test
     public void shouldSaveMultipleReservationsForARoom() {
         ReservationCreationDto reservationCreationDto = reservationCreationDto();
         ReservationCreationDto reservationCreationDto2 = new ReservationCreationDto("someoneElse",
