@@ -46,4 +46,22 @@ public class StartBeforeEndDateValidatorTest {
         assertFalse(result);
     }
 
+    @Test
+    public void nullDatesShouldBeValid() {
+        ReservationCreationDto reservationCreationDto = new ReservationCreationDto("userName", 2, null, null);
+
+        boolean result = validator.isValid(reservationCreationDto, constraintValidatorContext);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void oneNullDateShouldNotBeValid() {
+        ReservationCreationDto reservationCreationDto = new ReservationCreationDto("userName", 2, LocalDate.parse("2200-08-18"), null);
+
+        boolean result = validator.isValid(reservationCreationDto, constraintValidatorContext);
+
+        assertFalse(result);
+    }
+
 }

@@ -16,6 +16,8 @@ public class StartBeforeEndDateValidator implements ConstraintValidator<StartBef
         if (reservationCreationDto.getStartDate() == null && reservationCreationDto.getEndDate() == null) {
             return true;
         }
-        return reservationCreationDto.getStartDate().isBefore(reservationCreationDto.getEndDate());
+        return reservationCreationDto.getStartDate() != null
+                && reservationCreationDto.getEndDate() != null
+                && reservationCreationDto.getStartDate().isBefore(reservationCreationDto.getEndDate());
     }
 }
