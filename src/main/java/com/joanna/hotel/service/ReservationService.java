@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class ReservationService {
 
-    private ReservationRepository reservationRepository;
-    private RoomRepository roomRepository;
+    private final ReservationRepository reservationRepository;
+    private final RoomRepository roomRepository;
 
     @Autowired
     public ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository) {
