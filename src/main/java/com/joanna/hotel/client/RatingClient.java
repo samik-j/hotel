@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class RatingClient {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Value("${client.rating.base-url}")
     private String baseUrl;
