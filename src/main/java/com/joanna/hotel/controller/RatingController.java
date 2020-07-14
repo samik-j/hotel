@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -29,15 +30,12 @@ public class RatingController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<RatingDto> getAllRatings() {
-        log.info(test);
+    public List<RatingDto> getRatings(@RequestParam(required = false) Optional<Long> roomId) {
+        log.info("test property " + test);
+        if (roomId.isPresent()) {
+            return ratingClient.getRatingsByRoomId(roomId.get());
+        }
         return ratingClient.getAllRatings();
-    }
-
-    @GetMapping(params = {"roomId"},
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<RatingDto> getRatingsByRoomId(@RequestParam Long roomId) {
-        return ratingClient.getRatingsByRoomId(roomId);
     }
 
 }

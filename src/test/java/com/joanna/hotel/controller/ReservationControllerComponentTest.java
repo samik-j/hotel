@@ -77,7 +77,7 @@ public class ReservationControllerComponentTest {
     public void shouldReturnEmptyListForGetReservationsByRoomNumber() throws Exception {
         givenReservationExists();
 
-        ResultActions result = mockMvc.perform(get("/reservations?roomNumber=2"));
+        ResultActions result = mockMvc.perform(get("/reservations/findByRoomNumber?roomNumber=2"));
 
         assertSuccessWithListResponse(result, new ArrayList<>());
     }
@@ -87,7 +87,7 @@ public class ReservationControllerComponentTest {
         givenReservationExists();
         givenReservationExists();
 
-        ResultActions result = mockMvc.perform(get("/reservations?roomNumber=1"));
+        ResultActions result = mockMvc.perform(get("/reservations/findByRoomNumber?roomNumber=1"));
 
         ReservationDto reservationDto = reservationDto();
         reservationDto.setId(2L);
