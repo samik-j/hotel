@@ -2,26 +2,30 @@ package com.joanna.hotel.controller;
 
 import com.joanna.hotel.exception.NoRoomsAvailableException;
 import com.joanna.hotel.exception.ResourceNotFoundException;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = NoRoomsAvailableException.class)
-    public ResponseEntity<Object> handleNoRoomsAvailableException() {
-        return new ResponseEntity<Object>("No rooms available to book", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<JsonResponse> handleNoRoomsAvailableException() {
+        return new ResponseEntity<>(new JsonResponse("No rooms available to book"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException() {
-        return new ResponseEntity<Object>("Resource not found", HttpStatus.NOT_FOUND);
+    public ResponseEntity<JsonResponse> handleResourceNotFoundException() {
+        return new ResponseEntity<>(new JsonResponse("Resource not found"), HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -30,6 +34,14 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
                                                                HttpStatus status,
                                                                WebRequest request) {
 
-        return handleExceptionInternal(ex, ex.getMessage(), headers, HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, new JsonResponse(ex.getMessage()), headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    private class JsonResponse {
+        String message;
     }
 }
