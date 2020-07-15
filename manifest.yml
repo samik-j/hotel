@@ -5,4 +5,4 @@ applications:
     env:
       spring.profiles.active: cloud
     services:
-      - eureka-service-joanna
+      - eureka
