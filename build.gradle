@@ -23,30 +23,30 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config'
 //	FOR LOCAL SERVICE DISCOVERY
-//	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+//	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client'
 //  FOR PCF SERVICE DISCOVERY
-    implementation 'io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry'
-    compileOnly 'org.projectlombok:lombok'
+    implementation group: 'io.pivotal.spring.cloud', name: 'spring-cloud-services-starter-service-registry'
+    compileOnly group: 'org.projectlombok', name: 'lombok'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.2.8.RELEASE'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
-    implementation('org.flywaydb:flyway-core')
+    implementation group: 'org.flywaydb', name: 'flyway-core'
     runtimeOnly 'com.h2database:h2'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    developmentOnly group: 'org.springframework.boot', name: 'spring-boot-devtools'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok'
+    testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation("org.assertj:assertj-core:3.11.1")
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
     testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test'
 }
 
 dependencyManagement {
