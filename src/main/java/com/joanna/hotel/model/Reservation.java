@@ -34,11 +34,4 @@ public class Reservation {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public Reservation(String userName, Integer numberOfPeople, LocalDate startDate, LocalDate endDate, Room room) {
-        this.userName = userName;
-        this.numberOfPeople = numberOfPeople;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.room = room;
-    }
 }

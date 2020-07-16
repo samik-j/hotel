@@ -4,6 +4,7 @@ import com.joanna.hotel.dto.ReservationCreationDto;
 import com.joanna.hotel.dto.ReservationDto;
 import com.joanna.hotel.exception.NoRoomsAvailableException;
 import com.joanna.hotel.exception.ResourceNotFoundException;
+import com.joanna.hotel.mapper.ReservationMapper;
 import com.joanna.hotel.model.Reservation;
 import com.joanna.hotel.model.Room;
 import com.joanna.hotel.model.RoomType;
@@ -31,18 +32,19 @@ public class ReservationService {
     }
 
     public ReservationDto findById(Long reservationId) {
-        return new ReservationDto(reservationRepository.findById(reservationId).orElseThrow(ResourceNotFoundException::new));
+        return ReservationMapper.INSTANCE.reservationToReservationDto(reservationRepository.findById(reservationId)
+                                                                                           .orElseThrow(ResourceNotFoundException::new));
     }
 
     public List<ReservationDto> findAll() {
         return reservationRepository.findAll().stream()
-                                    .map(ReservationDto::new).collect(Collectors.toList());
+                                    .map(ReservationMapper.INSTANCE::reservationToReservationDto).collect(Collectors.toList());
     }
 
     public List<ReservationDto> findByRoomNumber(Integer roomNumber) {
         return reservationRepository.findByRoomNumber(roomNumber)
                                     .stream()
-                                    .map(ReservationDto::new)
+                                    .map(ReservationMapper.INSTANCE::reservationToReservationDto)
                                     .collect(Collectors.toList());
     }
 
@@ -50,11 +52,7 @@ public class ReservationService {
     public Long save(ReservationCreationDto reservationCreationDto) {
         Room roomToBook = findRoom(reservationCreationDto);
 
-        Reservation reservation = new Reservation(reservationCreationDto.getUserName(),
-                                                  reservationCreationDto.getNumberOfPeople(),
-                                                  reservationCreationDto.getStartDate(),
-                                                  reservationCreationDto.getEndDate(),
-                                                  roomToBook);
+        Reservation reservation = ReservationMapper.INSTANCE.reservationCreationDtoAndRoomToReservation(reservationCreationDto, roomToBook);
 
         roomToBook.getReservations().add(reservation);
         reservation = reservationRepository.save(reservation);
@@ -79,7 +77,7 @@ public class ReservationService {
 
         reservation = reservationRepository.save(reservation);
 
-        return new ReservationDto(reservation);
+        return ReservationMapper.INSTANCE.reservationToReservationDto(reservation);
     }
 
     public void delete(Long reservationId) {
