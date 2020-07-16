@@ -45,8 +45,11 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.11.1'
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation group: 'org.springframework.security', name: 'spring-security-test'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.4.2'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.4.2'
+    testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.4.2'
 }
 
 dependencyManagement {
