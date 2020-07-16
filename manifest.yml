@@ -1,7 +1,7 @@
 ---
 applications:
   - name: hotel-joanna
-    path: target\hotel-0.0.1-SNAPSHOT.jar
+    path: build\libs\hotel-0.0.1-SNAPSHOT.jar
     env:
       spring.profiles.active: cloud
     services:

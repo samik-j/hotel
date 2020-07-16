@@ -28,6 +28,8 @@
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
+.gradle/
+build/
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -138,3 +140,5 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,maven
+/.idea/
+/hotel.iml
