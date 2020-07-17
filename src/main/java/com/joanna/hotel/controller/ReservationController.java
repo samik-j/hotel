@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservations")
@@ -58,5 +57,6 @@ public class ReservationController {
     @DeleteMapping(value = "/{reservationId}")
     public void deleteReservation(@PathVariable Long reservationId) {
         reservationService.delete(reservationId);
+        System.out.println();
     }
 }
