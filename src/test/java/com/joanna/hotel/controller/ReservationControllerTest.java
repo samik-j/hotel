@@ -1,6 +1,5 @@
 package com.joanna.hotel.controller;
 
-import com.joanna.hotel.dto.ReservationDto;
 import com.joanna.hotel.exception.NoRoomsAvailableException;
 import com.joanna.hotel.exception.ResourceNotFoundException;
 import com.joanna.hotel.service.ReservationService;
@@ -17,16 +16,15 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static com.joanna.hotel.TestUtils.reservationCreationDtoJson;
-import static com.joanna.hotel.TestUtils.reservationDto;
+import static com.joanna.hotel.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureWebClient
@@ -186,29 +184,4 @@ public class ReservationControllerTest {
         result.andExpect(status().isOk());
     }
 
-    private void assertSuccessWithListResponse(ResultActions resultActions, List<ReservationDto> reservationDtos) throws Exception {
-        resultActions.andExpect(status().isOk())
-                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                     .andExpect(jsonPath("$.length()").value(reservationDtos.size()));
-        String s = resultActions.andReturn().getResponse().getContentAsString();
-        for (int i = 0; i < reservationDtos.size(); i++) {
-            resultActions.andExpect(jsonPath("[" + i + "].id").value(reservationDtos.get(i).getId()))
-                         .andExpect(jsonPath("[" + i + "].userName").value(reservationDtos.get(i).getUserName()))
-                         .andExpect(jsonPath("[" + i + "].numberOfPeople").value(reservationDtos.get(i).getNumberOfPeople()))
-                         .andExpect(jsonPath("[" + i + "].startDate").value(reservationDtos.get(i).getStartDate().toString()))
-                         .andExpect(jsonPath("[" + i + "].endDate").value(reservationDtos.get(i).getEndDate().toString()))
-                         .andExpect(jsonPath("[" + i + "].roomNumber").value(reservationDtos.get(i).getRoomNumber()));
-        }
-    }
-
-    private void assertSuccessWithResponse(ResultActions resultActions, ReservationDto reservationDto) throws Exception {
-        resultActions.andExpect(status().isOk())
-                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                     .andExpect(jsonPath("$.id").value(reservationDto.getId()))
-                     .andExpect(jsonPath("$.userName").value(reservationDto.getUserName()))
-                     .andExpect(jsonPath("$.numberOfPeople").value(reservationDto.getNumberOfPeople()))
-                     .andExpect(jsonPath("$.startDate").value(reservationDto.getStartDate().toString()))
-                     .andExpect(jsonPath("$.endDate").value(reservationDto.getEndDate().toString()))
-                     .andExpect(jsonPath("$.roomNumber").value(reservationDto.getRoomNumber()));
-    }
 }
