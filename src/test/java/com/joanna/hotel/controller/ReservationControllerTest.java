@@ -3,6 +3,7 @@ package com.joanna.hotel.controller;
 import com.joanna.hotel.exception.NoRoomsAvailableException;
 import com.joanna.hotel.exception.ResourceNotFoundException;
 import com.joanna.hotel.service.ReservationService;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,13 +117,36 @@ public class ReservationControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestForInvalidRequestBodyOnCreation() throws Exception {
+    public void shouldReturnBadRequestForEmptyRequestBodyOnCreation() throws Exception {
         ResultActions result = mockMvc.perform(post("/reservations")
                                                        .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                        .content("{}"));
 
         result.andExpect(status().isBadRequest());
         assertThat(result.andReturn().getResponse().getContentAsString()).contains("Validation failed");
+    }
+
+    @Test
+    public void shouldReturnBadRequestForInvalidRequestBodyOnCreation() throws Exception {
+        ResultActions result = mockMvc.perform(post("/reservations")
+                                                       .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                       .content("{\"userName\":\"as\"}"));
+
+        result.andExpect(status().isBadRequest());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("Validation failed");
+    }
+
+    @Test
+    public void shouldReturnBadRequestIfStartDateIsAfterEndDateOnCreation() throws Exception {
+        JSONObject jsonObject = new JSONObject(reservationCreationDtoJson());
+        jsonObject.put("startDate", "2221-06-10");
+
+        ResultActions result = mockMvc.perform(post("/reservations")
+                                                       .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                       .content(jsonObject.toString()));
+
+        result.andExpect(status().isBadRequest());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("start date must be before end date");
     }
 
     @Test
@@ -149,7 +173,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestForInvalidRequestBodyOnUpdate() throws Exception {
+    public void shouldReturnBadRequestForEmptyRequestBodyOnUpdate() throws Exception {
         ResultActions result = mockMvc.perform(put("/reservations/1")
                                                        .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                        .content("{}"));
@@ -159,7 +183,29 @@ public class ReservationControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestForNoRoomsAvailableOnUpdate() throws Exception {
+    public void shouldReturnBadRequestForInvalidRequestBodyOnUpdate() throws Exception {
+        ResultActions result = mockMvc.perform(put("/reservations/1")
+                                                       .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                       .content("{\"userName\":\"as\"}"));
+
+        result.andExpect(status().isBadRequest());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("Validation failed");
+    }
+
+    @Test
+    public void shouldReturnBadRequestIfStartDateIsAfterEndDateOnUpdate() throws Exception {
+        JSONObject jsonObject = new JSONObject(reservationCreationDtoJson());
+        jsonObject.put("startDate", "2221-06-10");
+
+        ResultActions result = mockMvc.perform(put("/reservations/1")
+                                                       .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                       .content(jsonObject.toString()));
+
+        result.andExpect(status().isBadRequest());
+        assertThat(result.andReturn().getResponse().getContentAsString()).contains("start date must be before end date");
+    }
+    @Test
+    public void shouldReturnBadRequestIfNoRoomsAvailableOnUpdate() throws Exception {
         when(reservationService.updateReservation(eq(1L), any())).thenThrow(new NoRoomsAvailableException());
 
         ResultActions result = mockMvc.perform(put("/reservations/1")
