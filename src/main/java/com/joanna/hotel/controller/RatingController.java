@@ -1,7 +1,7 @@
 package com.joanna.hotel.controller;
 
-import com.joanna.hotel.client.RatingClient;
 import com.joanna.hotel.dto.RatingDto;
+import com.joanna.hotel.client.RatingClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

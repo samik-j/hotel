@@ -1,7 +1,6 @@
 package com.joanna.hotel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.joanna.hotel.model.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

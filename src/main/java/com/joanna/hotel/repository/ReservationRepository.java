@@ -1,11 +1,12 @@
 package com.joanna.hotel.repository;
 
 import com.joanna.hotel.model.Reservation;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
