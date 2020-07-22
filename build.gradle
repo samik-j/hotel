@@ -31,9 +31,9 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config'
     implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.0.0.RELEASE'
 //	FOR LOCAL SERVICE DISCOVERY
-	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client'
+//	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client'
 //  FOR PCF SERVICE DISCOVERY
-//    implementation (group: 'io.pivotal.spring.cloud', name: 'spring-cloud-services-starter-service-registry')
+    implementation (group: 'io.pivotal.spring.cloud', name: 'spring-cloud-services-starter-service-registry')
     compileOnly group: 'org.projectlombok', name: 'lombok'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.2.8.RELEASE'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'

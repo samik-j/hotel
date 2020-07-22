@@ -32,7 +32,7 @@ public class RatingClient {
     }
 
     public List<RatingDto> getRatingsByRoomId(Long roomId) {
-        String url = baseUrl + "/ratings?roomId={roomId}";
+        String url = baseUrl + "/ratings/findByRoomId?roomId={roomId}";
         return restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<RatingDto>>() {}, roomId)
                            .getBody();
     }
