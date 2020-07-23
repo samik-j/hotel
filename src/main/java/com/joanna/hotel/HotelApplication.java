@@ -25,7 +25,7 @@ public class HotelApplication {
     }
 
     @Bean
-    @ConfigurationProperties("roomrating.oauth2.client")
+    @ConfigurationProperties("security.oauth2.client")
     protected ClientCredentialsResourceDetails oAuthDetails() {
         return new ClientCredentialsResourceDetails();
     }
