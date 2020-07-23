@@ -1,4 +1,4 @@
-package com.joanna.hotel;
+package com.joanna.hotel.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
