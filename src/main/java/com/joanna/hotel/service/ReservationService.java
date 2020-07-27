@@ -24,11 +24,13 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
+    private final RabbitMQSender rabbitMQSender;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository) {
+    public ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository, RabbitMQSender rabbitMQSender) {
         this.reservationRepository = reservationRepository;
         this.roomRepository = roomRepository;
+        this.rabbitMQSender = rabbitMQSender;
     }
 
     public ReservationDto findById(Long reservationId) {
@@ -57,6 +59,8 @@ public class ReservationService {
         roomToBook.getReservations().add(reservation);
         reservation = reservationRepository.save(reservation);
         roomRepository.save(roomToBook);
+
+        rabbitMQSender.sendRoomEvent("Room booked");
 
         return reservation.getId();
     }

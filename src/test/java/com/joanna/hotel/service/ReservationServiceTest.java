@@ -41,6 +41,9 @@ public class ReservationServiceTest {
     private ReservationRepository reservationRepository;
 
     @Mock
+    private RabbitMQSender rabbitMQSender;
+
+    @Mock
     private RoomRepository roomRepository;
 
     @InjectMocks

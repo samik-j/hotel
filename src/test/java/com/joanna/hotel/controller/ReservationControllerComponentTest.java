@@ -5,13 +5,16 @@ import com.joanna.hotel.model.Room;
 import com.joanna.hotel.model.RoomType;
 import com.joanna.hotel.repository.ReservationRepository;
 import com.joanna.hotel.repository.RoomRepository;
+import com.joanna.hotel.service.RabbitMQSender;
 import org.json.JSONObject;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +37,9 @@ public class ReservationControllerComponentTest {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @MockBean
+    private RabbitMQSender rabbitMQSender;
 
     @Autowired
     private MockMvc mockMvc;
